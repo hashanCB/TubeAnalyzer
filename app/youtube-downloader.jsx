@@ -1,13 +1,12 @@
 'use client'
-import { ArrowRight, Link2 } from "lucide-react"
+import {  Link2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import React, { useEffect, useState, useTransition } from 'react'
 import { getyoutubevideo } from './api/youtube'
 import Sentiment from 'sentiment'
-import Lottie from "lottie-react";
-import animationData from "./anime/serach.json"; 
-import animationData2 from "./anime/fetch.json"; 
+
+
 import Very_Positivesvg from "./anime/smiling-face.json"; 
 import Positive from "./anime/winking-face.json"; 
 import Mild_Positive from "./anime/lottie.json"; 
