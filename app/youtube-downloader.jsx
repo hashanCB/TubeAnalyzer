@@ -113,9 +113,9 @@ export default function YouTubeDownloader({setyulr,yurl,trimvalu}) {
 
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black via-gray-900 to-gray-800 text-white flex flex-col items-center justify-center px-4 py-12">
+    <div className="min-h-screen bg-gradient-to-b from-black via-gray-900 to-gray-800 text-white flex flex-col items-center justify-center  px-4 py-12 ">
 
-      <div className="max-w-3xl flex flex-col w-full text-center space-y-4">
+      <div className="max-w-3xl flex flex-col w-full text-center space-y-4 md:-mt-20">
         <h1 className="text-4xl md:text-5xl font-bold tracking-tight">YouTube Video Sentiment Analysis</h1>
         <p className=" text-[#888888]">
         Analyze YouTube video comments with TubeAnalyzer! Get instant sentiment insights—positive or negative—and valuable feedback. Perfect for creators and viewers!
@@ -166,7 +166,7 @@ export default function YouTubeDownloader({setyulr,yurl,trimvalu}) {
         </div>
 
         <div className="flex flex-col md:fixed md:flex-col p-5 px-10 bottom-0 left-0 right-0 mt-8 gap-4">
-          <div className=" flex text-justify  gap-4 ">
+          <div className=" flex flex-col md:flex md:flex-row text-justify  gap-4 ">
                 <div>
                   <p className=" text-[#888888]">  Better data</p>
                   <p className=" text-[12px] text-[#888888]">
