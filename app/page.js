@@ -1,9 +1,9 @@
 'use client'
 import Image from "next/image";
-import VideoList from "./VideoList";
+
 import { useEffect, useState } from "react";
 import YouTubeDownloader from "./youtube-downloader";
-import Hero from "./Hore";
+
 
 
 export default function Home() {
@@ -19,7 +19,7 @@ export default function Home() {
   },[yurl])
   return (
    <div>
-    {/* <Hero/> */}
+
     <YouTubeDownloader setyulr={setyulr} yurl={yurl}  trimvalu={trimvalu}/>
    </div>
   );
