@@ -27,16 +27,41 @@ const sentimentToEmoji = {
 }
 
 
-
-
-
-
-export default function YouTubeDownloader({setyulr,yurl,trimvalu}) {
+export default function YouTubeDownloader() {
     const [videoscom , setvideocom] = useState([])
     const [reaction,setReaction] = useState("")
     const [finalmood,setFinalmood] = useState()
     const [isfetch,setIsfetch] = useState(true)
-    
+
+    //genaral code
+    const [yurl,setyulr] = useState("")
+    const [trimvalu , settrim] = useState("")
+    const [error,setError] = useState("")
+    const [buttonActive,setbuttonActive] = useState(true)
+  
+
+
+    const useronChange = (data) => {
+      let values = /^https:\/\/www\.youtube\.com\/watch\?.*$/.test(data)
+      console.log(values)
+      if(!values){
+        setError("Oops! It seems the YouTube link you entered is invalid")
+       
+      }else{
+       setbuttonActive(false)
+       setError("")
+      }
+      
+      setyulr(data)
+    }
+    const userInput = () => {
+      let temptrimp = yurl.split("")
+      let newarry = temptrimp.slice(temptrimp.indexOf("=")+1).join("")
+      console.log(newarry)
+      settrim(newarry)
+    }
+
+    //analazing part
     
     const sentimat = new Sentiment()
     
@@ -125,33 +150,17 @@ export default function YouTubeDownloader({setyulr,yurl,trimvalu}) {
             <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
               <Link2 className="h-4 w-4" />
             </div>
-            <Input type="url" value={yurl} placeholder="https://www.youtube.com/watch?v=sadadasdsa" onChange={(e)=>setyulr(e.target.value)}   className="pl-9" />
+            <Input type="url" value={yurl} placeholder="https://www.youtube.com/watch?v=sadadasdsa" onChange={(e)=>useronChange(e.target.value)}   className="pl-9" />
           </div>
-          <Button onClick={()=>setyulr("")} className="bg-red-500 hover:bg-red-600">Analyze</Button>
+          <Button onClick={(e)=>userInput(e.target.value)}  disabled={buttonActive} className="bg-red-500 hover:bg-red-600">Analyze</Button>
         </div>
+        { error !== "" ?   <p>{error}</p> : null }
 
         <p className="text-sm text-muted-foreground mt-4">
           Please ensure that the files you download do not violate the rights of others. Copyrighted music cannot be
           downloaded using this tool.
         </p>
 
-        {/* <div>
-    
-          <div  className=" flex items-start justify-center mx-auto w-[300px] h-[300px]" >
-              {!trimvalu &&  <Lottie animationData={animationData} loop={true} /> }   
-                {trimvalu && isfetch && (
-                <div>
-                    <Lottie animationData={animationData2} loop={true} />
-                </div>
-                )}
-               {trimvalu && (
-                    <div>
-                         <p>Viewer Sentiment: {videoscom && videoscom.length} comments analyzed!</p>
-                        <Lottie animationData={finalmood} loop={true} />
-                    </div>
-                    )}
-          </div>
-        </div> */}
            
 
            
