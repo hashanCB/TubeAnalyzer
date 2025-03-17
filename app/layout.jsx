@@ -5,8 +5,8 @@ import { ThemeProvider } from "@/components/theme-provider"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata = {
-  title: "KokonutUI Dashboard",
-  description: "A modern dashboard with theme switching",
+  title: "TubeAnalyzer",
+  description: "Unlock the Sentiment Behind YouTube Videos",
 }
 
 export default function RootLayout({

@@ -58,7 +58,7 @@ export default function YouTubeDownloader() {
             <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
               <Link2 className="h-4 w-4" />
             </div>
-            <Input type="url" value={yurl} placeholder="https://www.youtube.com/watch?v=sadadasdsa" onChange={(e)=>useronChange(e.target.value)}   className="pl-9" />
+            <Input type="url" value={yurl} placeholder="https://www.youtube.com/watch?v=" onChange={(e)=>useronChange(e.target.value)}   className="pl-9" />
           </div>
           <Button onClick={(e)=>userInput(e.target.value)}  disabled={buttonActive} className="bg-red-500 hover:bg-red-600">Analyze</Button>
         </div>
