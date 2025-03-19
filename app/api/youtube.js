@@ -1,5 +1,6 @@
 'use server'
 import mongoose from "mongoose";
+import { redirect } from "next/navigation";
 
 // Connect to MongoDB
 const MONGODB_URI = process.env.MONGODB_URI;
@@ -18,10 +19,8 @@ async function connectToDatabase() {
     if (mongoose.connection.readyState === 1) {
         return; // Already connected
     }
-    await mongoose.connect(MONGODB_URI, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-    });
+    await mongoose.connect(MONGODB_URI); // No need for deprecated options anymore
+
 }
 
 export const getYouTubeVideoDetails = async (videoId, ipAddress) => {
@@ -50,9 +49,8 @@ export const getYouTubeVideoDetails = async (videoId, ipAddress) => {
 
         if (requestCount >= 5) {
             console.log(`IP ${ipAddress} has exceeded the daily limit of 5 requests.`);
-            return { error: "Daily limit exceeded" }, { status: 429 };
-
-        }
+            redirect("/error"); // Redirects the user
+          }
 
         // Fetch video details
         const videoResponse = await fetch(YOUTUBE_VIDEO_URL);
