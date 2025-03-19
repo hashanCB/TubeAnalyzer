@@ -8,7 +8,7 @@ if (!MONGODB_URI) throw new Error("MongoDB URI is missing!");
 // Define Schema for Rate Limiting
 const requestSchema = new mongoose.Schema({
     ip: String,
-    requestCount: { type: Number, default: 0 }, // Track request count
+    requestCount: { type: Number, default: 0 },
     requestDate: { type: Date, default: Date.now }
 });
 
@@ -17,9 +17,9 @@ const RequestLog = mongoose.models.RequestLog || mongoose.model("RequestLog", re
 // Connect to MongoDB
 async function connectToDatabase() {
     if (mongoose.connection.readyState === 1) {
-        return; // Already connected
+        return;
     }
-    await mongoose.connect(MONGODB_URI); // No need for deprecated options anymore
+    await mongoose.connect(MONGODB_URI);
 }
 
 export const getYouTubeVideoDetails = async (videoId, ipAddress) => {
@@ -29,7 +29,7 @@ export const getYouTubeVideoDetails = async (videoId, ipAddress) => {
         return { error: "Video ID is required" };
     }
 
-    const API_KEY = process.env.YOUTUBE_API_KEY; // Ensure this is set in .env
+    const API_KEY = process.env.YOUTUBE_API_KEY;
     const YOUTUBE_VIDEO_URL = `https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics&id=${videoId}&key=${API_KEY}`;
     const YOUTUBE_COMMENTS_URL = `https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&videoId=${videoId}&key=${API_KEY}&textFormat=plainText&maxResults=100`;
 
@@ -39,27 +39,29 @@ export const getYouTubeVideoDetails = async (videoId, ipAddress) => {
 
         // Get today's date at midnight
         const today = new Date();
-        today.setHours(0, 0, 0, 0); // Start of the day
+        today.setHours(0, 0, 0, 0);
 
         // Check if the IP exists in the database
         let requestLog = await RequestLog.findOne({
             ip: ipAddress,
-            requestDate: { $gte: today } // Filter by today's date (starting from midnight)
+            requestDate: { $gte: today }
         });
 
         // If no log found for the IP, create a new entry
         if (!requestLog) {
             requestLog = new RequestLog({
                 ip: ipAddress,
-                requestDate: today, // Store the date as today
-                requestCount: 0 // Initialize count to 0 for the new day
+                requestDate: today,
+                requestCount: 0
             });
         }
 
         // Check if the request count for the day exceeds 5
-        if (requestLog.requestCount >= 1) {
+        if (requestLog.requestCount >= 5) {  // Changed from 1 to 5
             console.log(`IP ${ipAddress} has exceeded the daily limit of 5 requests.`);
-            return { error: "Daily limit exceeded" }, { status: 429 }; // Return 429 status for too many requests
+            return { 
+                error: "Daily limit of 5 requests exceeded" 
+            }, { status: 429 };
         }
 
         // Increment the request count for the IP address
