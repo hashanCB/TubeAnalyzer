@@ -38,7 +38,7 @@ export default function YouTubeDownloader() {
     const userInput = () => {
       let temptrimp = yurl.split("")
       let newarry = (temptrimp.slice(temptrimp.indexOf("=")+1)).join("")
-      console.log(temptrimp)
+    
       route.push(`/${newarry}`)
      
     }

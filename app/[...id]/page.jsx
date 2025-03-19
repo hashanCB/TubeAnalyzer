@@ -55,9 +55,10 @@ const Page = () => {
 
   //1st run
   useEffect(() => {
+   
     const getvideo = async () => {
       try {
-        const response = await getYouTubeVideoDetails(id)
+        const response = await getYouTubeVideoDetails(id[0])
         
         if (response.status === 429) {
           route.push('/error')
