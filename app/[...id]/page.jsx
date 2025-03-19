@@ -58,7 +58,7 @@ const Page = () => {
     const getvideo = async () => {
       try {
         const response = await getYouTubeVideoDetails(id)
-        console.log(response.videoInfo.title)
+       console.log(response)
         setVideocom(response.comments)
         setVideoDetails(response.videoInfo || {})
 

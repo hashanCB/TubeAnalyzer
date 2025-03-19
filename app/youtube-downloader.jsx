@@ -21,8 +21,10 @@ export default function YouTubeDownloader() {
 
 
     const useronChange = (data) => {
-      let values = /^https:\/\/www\.youtube\.com\/watch\?.*$/.test(data)
-      console.log(values)
+      let removeElemt = data.split("&")
+     
+      let values = /^https:\/\/www\.youtube\.com\/watch\?.*$/.test(removeElemt[0])
+      
       if(!values){
         setError("Oops! It seems the YouTube link you entered is invalid")
        
@@ -30,13 +32,13 @@ export default function YouTubeDownloader() {
        setbuttonActive(false)
        setError("")
       }
-      
-      setyulr(data)
+    
+      setyulr(removeElemt[0])
     }
     const userInput = () => {
       let temptrimp = yurl.split("")
       let newarry = temptrimp.slice(temptrimp.indexOf("=")+1).join("")
-      console.log(newarry)
+      console.log(temptrimp)
       route.push(`/${newarry}`)
      
     }
