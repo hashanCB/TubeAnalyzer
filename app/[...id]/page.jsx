@@ -15,7 +15,7 @@ import Neutral from "@/app/anime/neutral.json"
 import Mild_Negative from "@/app/anime/slighty.json"
 import Negative from "@/app/anime/nagative.json"
 import Very_Negative from "@/app/anime/distraught.json"
-
+import requestIp from 'request-ip';
 import Lottie from "lottie-react"
 import Image from "next/image"
 
@@ -58,7 +58,11 @@ const Page = () => {
    
     const getvideo = async () => {
       try {
-        const response = await getYouTubeVideoDetails(id[0])
+        const responseip = await fetch('https://api.ipify.org?format=json');
+        const data = await responseip.json();
+        const ipAddress = data.ip;
+
+        const response = await getYouTubeVideoDetails(id[0],ipAddress)
         
         if (response.status === 429) {
           route.push('/error')
