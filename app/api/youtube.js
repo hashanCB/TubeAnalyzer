@@ -47,7 +47,7 @@ export const getYouTubeVideoDetails = async (videoId, ipAddress) => {
             requestDate: { $gte: today }
         });
 
-        if (requestCount >= 5) {
+        if (requestCount >= 20) {
             console.log(`IP ${ipAddress} has exceeded the daily limit of 5 requests.`);
             //redirect('/error')
             return { error: "Daily limit exceeded" }, { status: 429 };
