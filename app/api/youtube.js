@@ -41,7 +41,7 @@ export const getYouTubeVideoDetails = async (videoId, ipAddress) => {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
-        // Check if the IP exists in the database
+        // Check if the IP exists in the database for today
         let requestLog = await RequestLog.findOne({
             ip: ipAddress,
             requestDate: { $gte: today }
@@ -57,11 +57,9 @@ export const getYouTubeVideoDetails = async (videoId, ipAddress) => {
         }
 
         // Check if the request count for the day exceeds 5
-        if (requestLog.requestCount >= 5) {  // Changed from 1 to 5
+        if (requestLog.requestCount >= 1) {
             console.log(`IP ${ipAddress} has exceeded the daily limit of 5 requests.`);
-            return { 
-                error: "Daily limit of 5 requests exceeded" 
-            }, { status: 429 };
+            return { error: "Daily limit of 5 requests exceeded" }, { status: 429 };
         }
 
         // Increment the request count for the IP address
