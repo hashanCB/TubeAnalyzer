@@ -1,5 +1,5 @@
 "use client"
-import { useParams } from "next/navigation"
+import { useParams, useRouter } from "next/navigation"
 import { useState, useEffect } from "react"
 import { getYouTubeVideoDetails } from "@/app/api/youtube"
 import Sentiment from "sentiment"
@@ -41,7 +41,7 @@ const sentimentToColor = {
 
 const Page = () => {
   const { id } = useParams()
-
+  const route = useRouter()
   const [videoscom, setVideocom] = useState([])
   const [reaction, setReaction] = useState({})
   const [finalmood, setFinalmood] = useState(null)
@@ -58,7 +58,12 @@ const Page = () => {
     const getvideo = async () => {
       try {
         const response = await getYouTubeVideoDetails(id)
-       console.log(response)
+        
+        if (response.status === 429) {
+          route.push('/error')
+          return;
+      }
+
         setVideocom(response.comments)
         setVideoDetails(response.videoInfo || {})
 

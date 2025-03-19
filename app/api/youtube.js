@@ -1,6 +1,30 @@
 'use server'
+import mongoose from "mongoose";
 
-export const getYouTubeVideoDetails = async (videoId) => {
+// Connect to MongoDB
+const MONGODB_URI = process.env.MONGODB_URI;
+if (!MONGODB_URI) throw new Error("MongoDB URI is missing!");
+
+// Define Schema for Rate Limiting
+const requestSchema = new mongoose.Schema({
+    ip: String,
+    requestDate: Date
+});
+
+const RequestLog = mongoose.models.RequestLog || mongoose.model("RequestLog", requestSchema);
+
+// Connect to MongoDB
+async function connectToDatabase() {
+    if (mongoose.connection.readyState === 1) {
+        return; // Already connected
+    }
+    await mongoose.connect(MONGODB_URI, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+    });
+}
+
+export const getYouTubeVideoDetails = async (videoId, ipAddress) => {
     console.log("Fetching details and comments for video ID:", videoId);
 
     if (!videoId) {
@@ -12,6 +36,24 @@ export const getYouTubeVideoDetails = async (videoId) => {
     const YOUTUBE_COMMENTS_URL = `https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&videoId=${videoId}&key=${API_KEY}&textFormat=plainText&maxResults=100`;
 
     try {
+        // Connect to MongoDB
+        await connectToDatabase();
+
+        // Check if the IP has exceeded the daily limit (5 requests)
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Start of the day
+
+        const requestCount = await RequestLog.countDocuments({
+            ip: ipAddress,
+            requestDate: { $gte: today }
+        });
+
+        if (requestCount >= 5) {
+            console.log(`IP ${ipAddress} has exceeded the daily limit of 5 requests.`);
+            return { error: "Daily limit exceeded" }, { status: 429 };
+
+        }
+
         // Fetch video details
         const videoResponse = await fetch(YOUTUBE_VIDEO_URL);
         const videoData = await videoResponse.json();
@@ -47,6 +89,9 @@ export const getYouTubeVideoDetails = async (videoId) => {
             allComments = [...allComments, ...comments];
             nextPageToken = commentsData.nextPageToken;
         } while (nextPageToken);
+
+        // Log the request in MongoDB
+        await RequestLog.create({ ip: ipAddress, requestDate: new Date() });
 
         // Combine video details and comments
         return {
