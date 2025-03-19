@@ -9,7 +9,7 @@ if (!MONGODB_URI) throw new Error("MongoDB URI is missing!");
 const requestSchema = new mongoose.Schema({
     ip: String,
     requestCount: { type: Number, default: 0 }, // Track request count
-    requestDate: Date
+    requestDate: { type: Date, default: Date.now }
 });
 
 const RequestLog = mongoose.models.RequestLog || mongoose.model("RequestLog", requestSchema);
@@ -44,15 +44,15 @@ export const getYouTubeVideoDetails = async (videoId, ipAddress) => {
         // Check if the IP exists in the database
         let requestLog = await RequestLog.findOne({
             ip: ipAddress,
-            requestDate: { $gte: today } // Filter by today's date
+            requestDate: { $gte: today } // Filter by today's date (starting from midnight)
         });
 
         // If no log found for the IP, create a new entry
         if (!requestLog) {
             requestLog = new RequestLog({
                 ip: ipAddress,
-                requestDate: today,
-                requestCount: 0
+                requestDate: today, // Store the date as today
+                requestCount: 0 // Initialize count to 0 for the new day
             });
         }
 
