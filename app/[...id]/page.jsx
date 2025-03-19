@@ -61,6 +61,7 @@ const Page = () => {
         
         if (response.status === 429) {
           route.push('/error')
+       
           return;
       }
 
