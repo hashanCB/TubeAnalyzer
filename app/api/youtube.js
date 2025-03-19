@@ -20,7 +20,6 @@ async function connectToDatabase() {
         return; // Already connected
     }
     await mongoose.connect(MONGODB_URI); // No need for deprecated options anymore
-
 }
 
 export const getYouTubeVideoDetails = async (videoId, ipAddress) => {
@@ -42,16 +41,15 @@ export const getYouTubeVideoDetails = async (videoId, ipAddress) => {
         const today = new Date();
         today.setHours(0, 0, 0, 0); // Start of the day
 
+        // Count requests made by this IP for today
         const requestCount = await RequestLog.countDocuments({
             ip: ipAddress,
             requestDate: { $gte: today }
         });
 
-        if (requestCount >= 4) {
+        if (requestCount >= 5) {
             console.log(`IP ${ipAddress} has exceeded the daily limit of 5 requests.`);
-            //redirect('/error')
-            return { error: "Daily limit exceeded" }, { status: 429 };
-
+            return { error: "Daily limit exceeded" }, { status: 429 }; // Return 429 status for too many requests
         }
 
         // Fetch video details
