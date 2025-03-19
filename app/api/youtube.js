@@ -1,6 +1,5 @@
 'use server'
 import mongoose from "mongoose";
-import { redirect } from "next/navigation";
 
 // Connect to MongoDB
 const MONGODB_URI = process.env.MONGODB_URI;
@@ -9,6 +8,7 @@ if (!MONGODB_URI) throw new Error("MongoDB URI is missing!");
 // Define Schema for Rate Limiting
 const requestSchema = new mongoose.Schema({
     ip: String,
+    requestCount: { type: Number, default: 0 }, // Track request count
     requestDate: Date
 });
 
@@ -37,20 +37,36 @@ export const getYouTubeVideoDetails = async (videoId, ipAddress) => {
         // Connect to MongoDB
         await connectToDatabase();
 
-        // Check if the IP has exceeded the daily limit (5 requests)
+        // Get today's date at midnight
         const today = new Date();
         today.setHours(0, 0, 0, 0); // Start of the day
 
-        // Count requests made by this IP for today
-        const requestCount = await RequestLog.countDocuments({
+        // Check if the IP exists in the database
+        let requestLog = await RequestLog.findOne({
             ip: ipAddress,
-            requestDate: { $gte: today }
+            requestDate: { $gte: today } // Filter by today's date
         });
 
-        if (requestCount >= 5) {
+        // If no log found for the IP, create a new entry
+        if (!requestLog) {
+            requestLog = new RequestLog({
+                ip: ipAddress,
+                requestDate: today,
+                requestCount: 0
+            });
+        }
+
+        // Check if the request count for the day exceeds 5
+        if (requestLog.requestCount >= 1) {
             console.log(`IP ${ipAddress} has exceeded the daily limit of 5 requests.`);
             return { error: "Daily limit exceeded" }, { status: 429 }; // Return 429 status for too many requests
         }
+
+        // Increment the request count for the IP address
+        requestLog.requestCount += 1;
+
+        // Save the updated request log
+        await requestLog.save();
 
         // Fetch video details
         const videoResponse = await fetch(YOUTUBE_VIDEO_URL);
@@ -88,10 +104,7 @@ export const getYouTubeVideoDetails = async (videoId, ipAddress) => {
             nextPageToken = commentsData.nextPageToken;
         } while (nextPageToken);
 
-        // Log the request in MongoDB
-        await RequestLog.create({ ip: ipAddress, requestDate: new Date() });
-
-        // Combine video details and comments
+        // Return the video details and comments
         return {
             videoInfo,
             comments: allComments
