@@ -57,7 +57,7 @@ export const getYouTubeVideoDetails = async (videoId, ipAddress) => {
         }
 
         // Check if the request count for the day exceeds 5
-        if (requestLog.requestCount >= 1) {  // Limit set to 5 requests per day
+        if (requestLog.requestCount >= 5) {  // Limit set to 5 requests per day
             console.log(`IP ${ipAddress} has exceeded the daily limit of 5 requests.`);
             return { error: "Daily limit of 5 requests exceeded" }, { status: 429 };
         }

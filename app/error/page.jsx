@@ -12,7 +12,7 @@ export default function ErrorPage() {
         </div>
 
         <div className="space-y-4 text-muted-foreground">
-          <p>You have exceeded the daily limit of 4 requests in the free tier.</p>
+          <p>You have exceeded the daily limit of 5 requests in the free tier.</p>
           <p>Please try again tomorrow.</p>
         </div>
 
