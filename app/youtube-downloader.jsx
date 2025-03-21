@@ -1,5 +1,5 @@
 'use client'
-import {  Link2 } from "lucide-react"
+import {  Link2 ,ClipboardCopy } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import React, { useEffect, useState, useTransition } from 'react'
@@ -62,13 +62,21 @@ export default function YouTubeDownloader() {
             </div>
             <Input type="url" value={yurl} placeholder="https://www.youtube.com/watch?v=" onChange={(e)=>useronChange(e.target.value)}   className="pl-9" />
           </div>
-          <Button onClick={(e)=>userInput(e.target.value)}  disabled={buttonActive} className="bg-red-500 hover:bg-red-600">Analyze</Button>
+          <Button onClick={(e)=>userInput(e.target.value)}  disabled={buttonActive} className="bg-red-500 hover:bg-red-600 cursor-pointer">Analyze</Button>
         </div>
         { error !== "" ?   <p>{error}</p> : null }
 
-        <p className="text-sm text-muted-foreground mt-4">
-          Please ensure that the files you download do not violate the rights of others. Copyrighted music cannot be
-          downloaded using this tool.
+       
+        <div className="relative   flex flex-col sm:flex-row gap-3  ml-[13%]  md:ml-[25%] mt-8 mx-auto border-2 border-amber-50/15 p-2 rounded-lg ">
+        <label className=" text-sm text-[12px] text-[#888888] mr-6" > https://www.youtube.com/watch?v=6T-mgthXWzM&t=2s </label>
+            <div className="absolute right-0  mr-2 text-muted-foreground cursor-pointer">
+              <ClipboardCopy  className="h-4 w-4" onClick={()=>useronChange("https://www.youtube.com/watch?v=6T-mgthXWzM&t=2s")} />
+            </div>
+           
+          </div>
+      
+        <p className="text-sm text-[12px] font-bold text-[#6a9070] italic mt-4">
+        Daily Request Limit: Each IP can make up to 5 requests per day.
         </p>
 
            
@@ -83,7 +91,7 @@ export default function YouTubeDownloader() {
        
         </div>
 
-        <div className="flex flex-col md:fixed md:flex-col p-5 px-10 bottom-0 left-0 right-0 mt-8 gap-4">
+        <div className="flex flex-col md:fixed md:flex-col pb-1 px-10 bottom-0 left-0 right-0 mt-8 gap-4">
           <div className=" flex flex-col md:flex md:flex-row text-justify  gap-4 ">
                 <div>
                   <p className=" text-[#888888]">  Better data</p>
