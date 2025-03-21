@@ -7,7 +7,7 @@ pipeline {
 
     stages{
         stage("Checkout"){
-            step{
+            steps{
                 script{
                     echo "Hello world"
                 }
