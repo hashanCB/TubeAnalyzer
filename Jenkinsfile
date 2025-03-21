@@ -3,12 +3,10 @@
 pipeline {
     agent any
 
-    environment{
 
-    }
 
     stages{
-        stage{
+        stage("Checkout"){
             step{
                 script{
                     echo "Hello world"
